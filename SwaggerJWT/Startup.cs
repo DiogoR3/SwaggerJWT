@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using SwaggerJWT.Services;
 using System;
 
 namespace SwaggerJWT
@@ -18,7 +20,17 @@ namespace SwaggerJWT
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // For MongoDB
+            services.Configure<CarStoreDatabaseSettings>(
+                Configuration.GetSection(nameof(CarStoreDatabaseSettings)));
+
+            services.AddSingleton<ICarStoreDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<CarStoreDatabaseSettings>>().Value);
+
+            services.AddSingleton<CarService>();
+
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SwaggerJWT", Version = "v1" });
@@ -36,11 +48,11 @@ namespace SwaggerJWT
                     {
                         new OpenApiSecurityScheme
                         {
-                           Reference = new OpenApiReference
-                           {
-                             Type = ReferenceType.SecurityScheme,
-                             Id = "Bearer"
-                           }
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
                         },
                         Array.Empty<string>()
                     }
