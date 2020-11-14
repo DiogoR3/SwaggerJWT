@@ -1,4 +1,4 @@
-﻿namespace SwaggerJWT
+﻿namespace SwaggerJWT.Database
 {
     public interface ICarStoreDatabaseSettings
     {

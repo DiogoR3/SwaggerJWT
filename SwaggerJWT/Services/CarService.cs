@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using SwaggerJWT.Database;
 using SwaggerJWT.Models;
 using System.Collections.Generic;
 
